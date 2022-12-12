@@ -1,0 +1,31 @@
+body {
+  background-color: wheat;
+}
+
+button {
+  margin: 2rem;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 500px;
+  padding: 5px;
+}
+
+#containerpokemon {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 5px;
+}
+
+#card {
+  align-items: center;
+}
+
+#card:hover {
+  color: white;
+  background-color: paleturquoise;
+}
