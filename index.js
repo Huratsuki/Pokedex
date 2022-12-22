@@ -12,9 +12,12 @@ function getPokemons() {
         },
     ]
 }
-var listaPokemons = getPokemons();
-var cardTemplate = document.getElementById("cardTemplate");
+function getTiposPokemon() {
+    return ["Steel", "Fire", "Grass", "Electric", "Water", "ice", "Ground", "Rock", "Fairy", "Poison", "Bug", "Dragon", "Psychic", "Flying", "Fighting", "Normal"];
+}
 
+var listaPokemons = getPokemons();
+var listaTipos = getTiposPokemon();
 
 function salvar(event) {
     event.preventDefault();
@@ -24,25 +27,93 @@ function salvar(event) {
         tipo: document.getElementById("tipo").value,
         imagem: document.getElementById("imagem").value,
     }
-    listaPokemons.push(adicionarPokemon);
-    getPokemonCard();
+    if (validarTipo()) {
+        listaPokemons.push(adicionarPokemon);
+        insertTable(adicionarPokemon);
+        limparCampos();
+        nome.focus();
+    }
+    else
+        alert("Selecione o tipo do pokemon");
 }
 
-function cleanPokemonCards() {
-    while(containerpokemon.hasChildNodes()) {
-        containerpokemon.removeChild(containerpokemon.firstChild);
+function insertTable(pokemon) {
+
+    var tbody = document.getElementById("t-body");
+    var tr = tbody.insertRow();
+
+    var tdNome = tr.insertCell();
+    tdNome.innerText = pokemon.nome;
+
+    let tdTipo = tr.insertCell();
+    var badge = document.createElement("span");
+    badge.className = pokemon.tipo;
+    badge.id = "badge"
+    badge.innerText = pokemon.tipo;
+    tdTipo.appendChild(badge);
+
+    let tdImagem = tr.insertCell()
+    var img = document.createElement("img");
+    img.src = `${pokemon.imagem}`;
+    img.style.height = '60px';
+    tdImagem.appendChild(img);
+
+    let tdRemover = tr.insertCell();
+    var button = document.createElement("button");
+    button.innerText = "remover";
+    button.className = "btn btn-danger"
+    button.id = "removeButton"
+    button.onclick = function () {
+        removerPokemon(pokemon.nome);
+    }
+    tdRemover.appendChild(button);
+    console.log(tdTipo)
+}
+
+function limpar() {
+    var tbody = document.getElementById("t-body");
+    tbody.innerHTML = "";
+}
+
+function removerPokemon(nomePokemon) {
+    listaPokemons = listaPokemons.filter(item => item.nome !== nomePokemon);
+    iniciar();
+}
+
+function iniciar() {
+    limpar();
+    for (let index = 0; index < listaPokemons.length; index++) {
+        var pokemon = listaPokemons[index];
+        insertTable(pokemon);
     }
 }
 
-function getPokemonCard() {
-    cleanPokemonCards();
-    for (let index = 0; index < listaPokemons.length; index++) {
-        var pokemon = listaPokemons[index];
-        var card = cardTemplate.content.cloneNode(true).getElementById("card").outerHTML;
+function limparCampos() {
+    document.getElementById("nome").value = "";
+    document.getElementById("tipo").value = "Selecione o Tipo";
+    document.getElementById("imagem").value = "";
+}
 
-            card = card.replace(/{{nome}}/g, pokemon.nome);
-            card = card.replace(/{{tipo}}/g, pokemon.tipo);
-            card = card.replace(/{{imagem}}/g, pokemon.imagem);
-            containerpokemon.innerHTML += card;
-    }       
-}   
+function validarTipo() {
+    inputTipo = document.getElementById("tipo").value;
+    if (inputTipo == "Selecione o Tipo") {
+        return false
+    }
+    else {
+        return true
+    }
+}
+
+iniciar();
+montarTipos();
+
+function montarTipos() {
+    var tipos = getTiposPokemon();
+    var tipoPokemon = document.getElementById("tipo");
+    for (let index = 0; index < tipos.length; index++) {
+        const element = tipos[index];
+        var option = document.createElement("option");
+        option.text = element;
+        tipoPokemon.add(option);
+    }
+}
