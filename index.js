@@ -59,9 +59,11 @@ function insertTable(pokemon) {
     tdImagem.appendChild(img);
 
     let tdRemover = tr.insertCell();
-    var button = document.createElement("button");
-    button.innerText = "remover";
-    button.className = "btn btn-danger"
+    tdRemover.className = "align-remove-button";
+
+    var button = document.createElement("a");
+    button.innerHTML = "<i class='fa-solid fa-trash fa-xl'></i>";
+    button.title = "Remover pokemon";
     button.id = "removeButton"
     button.onclick = function () {
         removerPokemon(pokemon.nome);
@@ -76,8 +78,14 @@ function limpar() {
 }
 
 function removerPokemon(nomePokemon) {
-    listaPokemons = listaPokemons.filter(item => item.nome !== nomePokemon);
-    iniciar();
+    var confirmacao = confirm('Tem certeza que deseja excluir o pokemon?');
+
+    if (confirmacao) {
+        listaPokemons = listaPokemons.filter(item => item.nome !== nomePokemon);
+        iniciar();
+        alert(`O pokemon ${nomePokemon} for removido da sua pokedex`);
+    }
+
 }
 
 function iniciar() {
