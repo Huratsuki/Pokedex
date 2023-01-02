@@ -1,5 +1,16 @@
 var listaPokemons = []
 
+fetch("http://localhost:3000/meuspokemons")
+    .then(function (res) { return res.json(); })
+    .then(function (pokemons) {
+        listaPokemons = pokemons;
+        iniciar();
+    })
+    .catch(err => {
+        console.error(err);
+    });
+
+
 function salvar(event) {
     event.preventDefault();
     var adicionarPokemon = {
@@ -8,7 +19,8 @@ function salvar(event) {
         tipo: document.getElementById("tipo").value,
         imagem: document.getElementById("imagem").value,
     }
-    fetch("http://localhost:3000/meuspokemons", {
+
+    fetch("http://localhost:3000/pokemon", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -20,6 +32,7 @@ function salvar(event) {
         .catch(err => {
             console.error(err);
         });
+
     if (validarTipo()) {
         listaPokemons.push(adicionarPokemon);
         insertTable(adicionarPokemon);
