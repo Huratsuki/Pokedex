@@ -1,23 +1,4 @@
-function getPokemons() {
-    return [
-        {
-            nome: 'Pikachu',
-            tipo: 'Electric',
-            imagem: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/25.png'
-        },
-        {
-            nome: 'Squirtle',
-            tipo: 'Water',
-            imagem: 'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/7.png'
-        },
-    ]
-}
-function getTiposPokemon() {
-    return ["Steel", "Fire", "Grass", "Electric", "Water", "ice", "Ground", "Rock", "Fairy", "Poison", "Bug", "Dragon", "Psychic", "Flying", "Fighting", "Normal"];
-}
-
-var listaPokemons = getPokemons();
-var listaTipos = getTiposPokemon();
+var listaPokemons = []
 
 function salvar(event) {
     event.preventDefault();
@@ -27,6 +8,18 @@ function salvar(event) {
         tipo: document.getElementById("tipo").value,
         imagem: document.getElementById("imagem").value,
     }
+    fetch("http://localhost:3000/meuspokemons", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(adicionarPokemon),
+    })
+        .then(function (res) { return res.json(); })
+        .then(function (adicionarPokemon) { alert(JSON.stringify(adicionarPokemon)) })
+        .catch(err => {
+            console.error(err);
+        });
     if (validarTipo()) {
         listaPokemons.push(adicionarPokemon);
         insertTable(adicionarPokemon);
@@ -69,7 +62,6 @@ function insertTable(pokemon) {
         removerPokemon(pokemon.nome);
     }
     tdRemover.appendChild(button);
-    console.log(tdTipo)
 }
 
 function limpar() {
@@ -109,19 +101,5 @@ function validarTipo() {
     }
     else {
         return true
-    }
-}
-
-iniciar();
-montarTipos();
-
-function montarTipos() {
-    var tipos = getTiposPokemon();
-    var tipoPokemon = document.getElementById("tipo");
-    for (let index = 0; index < tipos.length; index++) {
-        const element = tipos[index];
-        var option = document.createElement("option");
-        option.text = element;
-        tipoPokemon.add(option);
     }
 }
